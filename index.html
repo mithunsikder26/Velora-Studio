@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Code Handmade Store</title>
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8;}
+header{background:#111;color:#fff;padding:15px;text-align:center;}
+.container{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{background:#fff;border-radius:15px;padding:15px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+.card img{width:100%;height:180px;object-fit:cover;border-radius:10px;}
+.price{font-weight:bold;margin:10px 0;}
+.btn{border:none;padding:12px;width:100%;border-radius:8px;cursor:pointer;margin-top:5px;font-size:16px;}
+.whatsapp{background:#25D366;color:white;}
+.upi{background:#ff9800;color:white;}
+.form-box{background:#fff;margin:20px;padding:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
+.form-box input, .form-box textarea{width:100%;padding:10px;margin-top:8px;border-radius:5px;border:1px solid #ccc;}
+</style>
+</head>
+<body><header>
+<h1>For Code Handmade Store</h1>
+<p>Order via WhatsApp or Pay Online</p>
+</header><div class="container"><div class="card">
+<img src="https://via.placeholder.com/300">
+<h3>Resin Pendant</h3>
+<p class="price">₹199</p>
+<button class="btn whatsapp" onclick="orderWhatsApp('Resin Pendant')">Order on WhatsApp</button>
+<button class="btn upi" onclick="payUPI(199)">Pay via UPI</button>
+</div><div class="card">
+<img src="https://via.placeholder.com/300">
+<h3>Handmade Earrings</h3>
+<p class="price">₹149</p>
+<button class="btn whatsapp" onclick="orderWhatsApp('Handmade Earrings')">Order on WhatsApp</button>
+<button class="btn upi" onclick="payUPI(149)">Pay via UPI</button>
+</div></div><div class="form-box">
+<h3>Order Form</h3>
+<input type="text" id="name" placeholder="Your Name">
+<input type="text" id="phone" placeholder="Phone Number">
+<textarea id="address" placeholder="Your Address"></textarea>
+<button class="btn whatsapp" onclick="submitOrder()">Submit Order</button>
+<p id="result"></p>
+</div><script>
+function orderWhatsApp(product){
+  var phone = "9775467300";
+  var msg = "Hello, I want to order " + product;
+  var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
+  window.location.href = url;
+}
+
+function payUPI(amount){
+  var upi = "upi://pay?pa=yourupiid@upi&pn=ForCodeStore&am=" + amount + "&cu=INR";
+  window.location.href = upi;
+}
+
+function submitOrder(){
+  var name=document.getElementById('name').value;
+  var phone=document.getElementById('phone').value;
+  var address=document.getElementById('address').value;
+
+  if(name=="" || phone=="" || address==""){
+    document.getElementById('result').innerText="Please fill all details";
+    return;
+  }
+
+  var message = "Order Details:%0AName: "+name+"%0APhone: "+phone+"%0AAddress: "+address;
+  var url = "https://wa.me/919932446368?text=" + message;
+  window.location.href=url;
+}
+</script></body>
+</html>
