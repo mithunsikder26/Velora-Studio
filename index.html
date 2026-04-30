@@ -16,41 +16,20 @@ header{background:#111;color:#fff;padding:15px;text-align:center;position:sticky
 .btn{border:none;padding:10px;width:100%;border-radius:8px;cursor:pointer;margin-top:5px;}
 .whatsapp{background:#25D366;color:white;}
 .upi{background:#ff9800;color:white;}
-.cartbtn{background:#2196f3;color:white;}
 
-/* 🔥 POPUP FORM */
+/* POPUP */
 .popup{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
+position:fixed;top:0;left:0;width:100%;height:100%;
 background:rgba(0,0,0,0.6);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:200;
+display:none;justify-content:center;align-items:center;z-index:200;
 }
-
 .popup-box{
-background:#fff;
-padding:20px;
-border-radius:12px;
-width:90%;
-max-width:350px;
+background:#fff;padding:20px;border-radius:12px;width:90%;max-width:350px;
 }
-
-.popup-box input, .popup-box textarea{
-width:100%;
-padding:10px;
-margin-top:8px;
-border-radius:5px;
-border:1px solid #ccc;
+.popup-box input,.popup-box textarea{
+width:100%;padding:10px;margin-top:8px;border-radius:5px;border:1px solid #ccc;
 }
-
-.close-btn{
-float:right;
-cursor:pointer;
-color:red;
-}
+.close-btn{float:right;cursor:pointer;color:red;}
 </style>
 </head>
 
@@ -63,7 +42,25 @@ color:red;
 
 <div class="container">
 
-<!-- Product -->
+<!-- Resin Pendant -->
+<div class="card">
+<img src="https://via.placeholder.com/300">
+<h3>Resin Pendant</h3>
+<p class="price">₹199</p>
+<button class="btn whatsapp" onclick="openForm('Resin Pendant',199,'whatsapp')">WhatsApp</button>
+<button class="btn upi" onclick="openForm('Resin Pendant',199,'upi')">Pay</button>
+</div>
+
+<!-- Earrings -->
+<div class="card">
+<img src="https://via.placeholder.com/300">
+<h3>Handmade Earrings</h3>
+<p class="price">₹149</p>
+<button class="btn whatsapp" onclick="openForm('Handmade Earrings',149,'whatsapp')">WhatsApp</button>
+<button class="btn upi" onclick="openForm('Handmade Earrings',149,'upi')">Pay</button>
+</div>
+
+<!-- Bala -->
 <div class="card">
 <img src="https://via.placeholder.com/300">
 <h3>Bala</h3>
@@ -72,6 +69,7 @@ color:red;
 <button class="btn upi" onclick="openForm('Bala',249,'upi')">Pay</button>
 </div>
 
+<!-- Mala -->
 <div class="card">
 <img src="https://via.placeholder.com/300">
 <h3>Mala</h3>
@@ -82,13 +80,13 @@ color:red;
 
 </div>
 
-<!-- 🔥 POPUP FORM -->
+<!-- POPUP FORM -->
 <div class="popup" id="popupForm">
 <div class="popup-box">
 
 <span class="close-btn" onclick="closeForm()">✖</span>
 
-<h3>Order Details</h3>
+<h3>Dream Store Order</h3>
 <p id="productName"></p>
 
 <input type="text" id="name" placeholder="Your Name">
@@ -140,7 +138,7 @@ window.location.href="https://wa.me/9775467300?text="+msg;
 }
 
 if(orderType==="upi"){
-window.location.href="upi://pay?pa=mithunsikder999@axl&pn=ForCodeStore&am="+selectedPrice+"&cu=INR";
+window.location.href="upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+selectedPrice+"&cu=INR";
 }
 }
 </script>
