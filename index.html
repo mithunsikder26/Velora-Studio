@@ -7,6 +7,7 @@
 <style>
 body{margin:0;font-family:Arial;background:#f4f6f8;}
 header{background:#111;color:#fff;padding:15px;text-align:center;}
+
 .search-box{text-align:center;padding:10px;}
 .search-box input{width:90%;max-width:400px;padding:10px;border-radius:8px;border:1px solid #ccc;}
 
@@ -20,11 +21,9 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 .upi{background:#ff9800;color:white;}
 .cartbtn{background:#2196f3;color:white;}
 
-/* CART */
-.cartModal{position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100%;background:#fff;transition:0.3s;padding:15px;overflow:auto;}
+.cartModal{position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100%;background:#fff;transition:0.3s;padding:15px;}
 .cartModal.open{right:0;}
 
-/* POPUP */
 .popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;}
 .popup-box{background:#fff;padding:20px;border-radius:10px;width:90%;max-width:350px;}
 .popup-box input,.popup-box textarea{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:5px;}
@@ -47,20 +46,11 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 
 <div class="card">
 <img src="https://via.placeholder.com/300">
-<h3>Resin Pendant</h3>
-<p class="price">₹199</p>
-<button class="btn cartbtn" onclick="addToCart('Resin Pendant',199)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Resin Pendant',199,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Resin Pendant',199,'upi')">Pay</button>
-</div>
-
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Handmade Earrings</h3>
-<p class="price">₹149</p>
-<button class="btn cartbtn" onclick="addToCart('Handmade Earrings',149)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Handmade Earrings',149,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Handmade Earrings',149,'upi')">Pay</button>
+<h3>Mala</h3>
+<p class="price">₹80</p>
+<button class="btn cartbtn" onclick="addToCart('Mala',80)">Add to Cart</button>
+<button class="btn whatsapp" onclick="openForm('Mala',80,'whatsapp')">WhatsApp</button>
+<button class="btn upi" onclick="openForm('Mala',80,'upi')">Pay</button>
 </div>
 
 <div class="card">
@@ -72,34 +62,25 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 <button class="btn upi" onclick="openForm('Bala',249,'upi')">Pay</button>
 </div>
 
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Mala</h3>
-<p class="price">₹80</p>
-<button class="btn cartbtn" onclick="addToCart('Mala',80)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Mala',80,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Mala',80,'upi')">Pay</button>
-</div>
-
 </div>
 
 <!-- CART -->
 <div class="cartModal" id="cartModal">
-<h3>Your Cart</h3>
+<h3>Cart</h3>
 <div id="cartItems"></div>
 <p id="totalPrice"></p>
 <button onclick="checkoutCart()">Checkout</button>
 <button onclick="closeCart()">Close</button>
 </div>
 
-<!-- POPUP -->
+<!-- FORM -->
 <div class="popup" id="popupForm">
 <div class="popup-box">
 <h3>Order Form</h3>
 <p id="productName"></p>
 
-<input type="text" id="name" placeholder="Your Name">
-<input type="text" id="phone" placeholder="Phone Number">
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
 <textarea id="address" placeholder="Address"></textarea>
 
 <button class="btn whatsapp" onclick="submitOrder()">Submit</button>
@@ -109,18 +90,19 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 <script>
 
 let cart=[];
+let mode=""; // cart / single
 let selectedProduct="";
 let selectedPrice=0;
-let orderType="";
 
-function addToCart(name,price){
-let f=cart.find(i=>i.name===name);
-if(f){f.qty++;}else{cart.push({name,price,qty:1});}
+function addToCart(n,p){
+let f=cart.find(i=>i.name===n);
+if(f){f.qty++;}else{cart.push({name:n,price:p,qty:1});}
 updateCart();
 }
 
 function updateCart(){
 document.getElementById("cartCount").innerText=cart.length;
+
 let html="",total=0;
 
 cart.forEach((i,idx)=>{
@@ -146,16 +128,17 @@ document.getElementById("cartModal").classList.remove("open");
 }
 
 function openForm(p,price,type){
+mode=type; // whatsapp / upi
 selectedProduct=p;
 selectedPrice=price;
-orderType=type;
+
 document.getElementById("productName").innerText=p+" ₹"+price;
 document.getElementById("popupForm").style.display="flex";
 }
 
 function checkoutCart(){
-orderType="cart";
-document.getElementById("productName").innerText="Cart Checkout";
+mode="cart";
+document.getElementById("productName").innerText="Cart Order";
 document.getElementById("popupForm").style.display="flex";
 }
 
@@ -165,11 +148,14 @@ let name=document.getElementById("name").value;
 let phone=document.getElementById("phone").value;
 let address=document.getElementById("address").value;
 
-if(!name||!phone||!address){alert("Fill all");return;}
+if(!name||!phone||!address){
+alert("Fill all details");return;
+}
 
-if(orderType==="cart"){
+/* CART ORDER */
+if(mode==="cart"){
 
-let msg="🛒 Dream Store Order%0A%0A";
+let msg="Dream Store Order%0A";
 let total=0;
 
 cart.forEach(i=>{
@@ -177,26 +163,34 @@ msg+=i.name+" x"+i.qty+" = ₹"+(i.price*i.qty)+"%0A";
 total+=i.price*i.qty;
 });
 
-msg+="%0ATotal ₹"+total+"%0A";
+msg+="Total ₹"+total+"%0A";
 msg+="Name:"+name+" Phone:"+phone+" Address:"+address;
 
 window.location.href="https://wa.me/9775467300?text="+msg;
-
-let note=encodeURIComponent("Order ₹"+total+" "+name);
-window.open("upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+total+"&cu=INR&tn="+note);
 
 cart=[];updateCart();
 return;
 }
 
-if(orderType==="whatsapp"){
-let msg="Product:"+selectedProduct+" ₹"+selectedPrice+" Name:"+name+" Phone:"+phone+" Address:"+address;
+/* SINGLE PRODUCT */
+if(mode==="whatsapp"){
+
+let msg="Product:"+selectedProduct+
+"%0APrice:₹"+selectedPrice+
+"%0AName:"+name+
+"%0APhone:"+phone+
+"%0AAddress:"+address;
+
 window.location.href="https://wa.me/9775467300?text="+msg;
 }
 
-if(orderType==="upi"){
+/* PAYMENT ONLY */
+if(mode==="upi"){
+
 let note=encodeURIComponent(selectedProduct+" "+name);
-window.location.href="upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+selectedPrice+"&cu=INR&tn="+note;
+
+window.location.href=
+"upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+selectedPrice+"&cu=INR&tn="+note;
 }
 
 }
