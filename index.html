@@ -14,7 +14,7 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 
 .container{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
 .card{background:#fff;border-radius:15px;padding:15px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-.card img{width:100%;height:180px;object-fit:cover;border-radius:10px;}
+.card img{width:100%;height:180px;object-fit:cover;border-radius:10px;cursor:pointer;}
 .price{font-weight:bold;margin:10px 0;}
 
 .btn{border:none;padding:10px;width:100%;border-radius:8px;margin-top:5px;cursor:pointer;}
@@ -28,6 +28,11 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 .popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;}
 .popup-box{background:#fff;padding:20px;border-radius:10px;width:90%;max-width:350px;}
 .popup-box input,.popup-box textarea{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:5px;}
+
+/* IMAGE MODAL */
+#imgModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:999;}
+#imgModal img{max-width:90%;max-height:90%;border-radius:10px;}
+#imgModal span{position:absolute;top:20px;right:30px;font-size:30px;color:white;cursor:pointer;}
 </style>
 </head>
 
@@ -43,7 +48,7 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 <input type="text" id="search" placeholder="Search..." onkeyup="filterProducts()">
 </div>
 
-<!-- 🔥 PRODUCTS AUTO LOAD -->
+<!-- PRODUCTS -->
 <div class="container" id="productContainer"></div>
 
 <!-- CART -->
@@ -73,6 +78,12 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 </div>
 </div>
 
+<!-- IMAGE VIEW MODAL -->
+<div id="imgModal">
+<span onclick="closeImage()">❌</span>
+<img id="modalImg">
+</div>
+
 <script>
 
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
@@ -83,7 +94,7 @@ let products = [
   {name:"Mala", price:80, image:"https://via.placeholder.com/300"}
 ];
 
-// AUTO LOAD
+// LOAD PRODUCTS
 function loadProducts(){
 let container=document.getElementById("productContainer");
 container.innerHTML="";
@@ -91,7 +102,7 @@ container.innerHTML="";
 products.forEach(p=>{
 container.innerHTML+=`
 <div class="card">
-<img src="${p.image}">
+<img src="${p.image}" onclick="openImage('${p.image}')">
 <h3>${p.name}</h3>
 <p class="price">₹${p.price}</p>
 
@@ -101,6 +112,15 @@ container.innerHTML+=`
 </div>
 `;
 });
+}
+
+// IMAGE VIEW
+function openImage(src){
+document.getElementById("imgModal").style.display="flex";
+document.getElementById("modalImg").src=src;
+}
+function closeImage(){
+document.getElementById("imgModal").style.display="none";
 }
 
 // CART
@@ -183,7 +203,7 @@ total+=i.price*i.qty;
 msg+="Total ₹"+total+"%0A";
 msg+="Name:"+name+" Phone:"+phone+" Address:"+address;
 
-window.location.href="https://wa.me/+919775467300?text="+msg;
+window.location.href="https://wa.me/919775467300?text="+msg;
 return;
 }
 
@@ -194,7 +214,7 @@ let msg="Product:"+selectedProduct+
 "%0APhone:"+phone+
 "%0AAddress:"+address;
 
-window.location.href="https://wa.me/+919775467300?text="+msg;
+window.location.href="https://wa.me/919775467300?text="+msg;
 }
 
 if(mode==="upi"){
