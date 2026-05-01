@@ -43,47 +43,8 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 <input type="text" id="search" placeholder="Search..." onkeyup="filterProducts()">
 </div>
 
-<div class="container">
-
-<!-- OLD PRODUCTS -->
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Resin Pendant</h3>
-<p class="price">₹199</p>
-<button class="btn cartbtn" onclick="addToCart('Resin Pendant',199)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Resin Pendant',199,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Resin Pendant',199,'upi')">Pay</button>
-</div>
-
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Handmade Earrings</h3>
-<p class="price">₹149</p>
-<button class="btn cartbtn" onclick="addToCart('Handmade Earrings',149)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Handmade Earrings',149,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Handmade Earrings',149,'upi')">Pay</button>
-</div>
-
-<!-- NEW PRODUCTS -->
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Bala</h3>
-<p class="price">₹249</p>
-<button class="btn cartbtn" onclick="addToCart('Bala',249)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Bala',249,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Bala',249,'upi')">Pay</button>
-</div>
-
-<div class="card">
-<img src="https://via.placeholder.com/300">
-<h3>Mala</h3>
-<p class="price">₹80</p>
-<button class="btn cartbtn" onclick="addToCart('Mala',80)">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('Mala',80,'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('Mala',80,'upi')">Pay</button>
-</div>
-
-</div>
+<!-- 🔥 PRODUCTS AUTO LOAD -->
+<div class="container" id="productContainer"></div>
 
 <!-- CART -->
 <div class="cartModal" id="cartModal">
@@ -114,15 +75,36 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 
 <script>
 
-let cart=[];
-let mode="";
-let selectedProduct="";
-let selectedPrice=0;
+// 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
+let products = [
+  {name:"Resin Pendant", price:199, image:"https://via.placeholder.com/300"},
+  {name:"Handmade Earrings", price:149, image:"https://via.placeholder.com/300"},
+  {name:"Bala", price:249, image:"https://via.placeholder.com/300"},
+  {name:"Mala", price:80, image:"https://via.placeholder.com/300"}
+];
 
-function closeForm(){
-document.getElementById("popupForm").style.display="none";
+// AUTO LOAD
+function loadProducts(){
+let container=document.getElementById("productContainer");
+container.innerHTML="";
+
+products.forEach(p=>{
+container.innerHTML+=`
+<div class="card">
+<img src="${p.image}">
+<h3>${p.name}</h3>
+<p class="price">₹${p.price}</p>
+
+<button class="btn cartbtn" onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
+<button class="btn whatsapp" onclick="openForm('${p.name}',${p.price},'whatsapp')">WhatsApp</button>
+<button class="btn upi" onclick="openForm('${p.name}',${p.price},'upi')">Pay</button>
+</div>
+`;
+});
 }
 
+// CART
+let cart=[];
 function addToCart(n,p){
 let f=cart.find(i=>i.name===n);
 if(f){f.qty++;}else{cart.push({name:n,price:p,qty:1});}
@@ -156,6 +138,9 @@ function closeCart(){
 document.getElementById("cartModal").classList.remove("open");
 }
 
+// ORDER
+let mode="",selectedProduct="",selectedPrice=0;
+
 function openForm(p,price,type){
 mode=type;
 selectedProduct=p;
@@ -163,6 +148,10 @@ selectedPrice=price;
 
 document.getElementById("productName").innerText=p+" ₹"+price;
 document.getElementById("popupForm").style.display="flex";
+}
+
+function closeForm(){
+document.getElementById("popupForm").style.display="none";
 }
 
 function checkoutCart(){
@@ -182,9 +171,7 @@ alert("Fill all details");
 return;
 }
 
-/* CART */
 if(mode==="cart"){
-
 let msg="Dream Store Order%0A";
 let total=0;
 
@@ -196,36 +183,30 @@ total+=i.price*i.qty;
 msg+="Total ₹"+total+"%0A";
 msg+="Name:"+name+" Phone:"+phone+" Address:"+address;
 
-closeForm();
 window.location.href="https://wa.me/9775467300?text="+msg;
 return;
 }
 
-/* SINGLE */
 if(mode==="whatsapp"){
-
 let msg="Product:"+selectedProduct+
 "%0APrice:₹"+selectedPrice+
 "%0AName:"+name+
 "%0APhone:"+phone+
 "%0AAddress:"+address;
 
-closeForm();
 window.location.href="https://wa.me/9775467300?text="+msg;
 }
 
-/* UPI */
 if(mode==="upi"){
-
 let note=encodeURIComponent(selectedProduct+" "+name);
 
-closeForm();
 window.location.href=
 "upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+selectedPrice+"&cu=INR&tn="+note;
 }
 
 }
 
+// SEARCH
 function filterProducts(){
 let s=document.getElementById("search").value.toLowerCase();
 let cards=document.getElementsByClassName("card");
@@ -235,6 +216,9 @@ let t=c.getElementsByTagName("h3")[0].innerText.toLowerCase();
 c.style.display=t.includes(s)?"block":"none";
 }
 }
+
+// LOAD
+loadProducts();
 
 </script>
 
