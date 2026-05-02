@@ -104,19 +104,19 @@ cursor: zoom-in;
 <script>
 
 // 🔥🔥🔥 শুধু এইখানে control করবে 🔥🔥🔥
-let noticeText = "🔥 🛒Free delivery charge above 199 rupees 🚚";
-let noticeEnabled = true; // true = show, false = hide
+let noticeText = "🔥 Today Offer:Buy 3 Get 1 Free 🚚";
+let noticeEnabled = true;
 
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
 let products = [
   {name:"Pendant", price:199, image:"https://via.placeholder.com/300"},
   {name:"Earrings", price:149, image:"https://via.placeholder.com/300"},
   {name:"Bala", price:249, image:"https://via.placeholder.com/300"},
-  {name:"globe", price:80, image:"https://i.postimg.cc/zfcrvd4s/globe.jpg/300"},
+  {name:"Mala", price:80, image:"https://i.postimg.cc/zfcrvd4s/globe.jpg/300"},
   {name:"churi", price:40, image:"https://via.placeholder.com/300"}
 ];
 
-// LOAD NOTICE
+// NOTICE
 function loadNotice(){
 if(noticeEnabled){
 document.getElementById("noticeBoard").style.display="block";
@@ -126,7 +126,7 @@ document.getElementById("noticeBoard").style.display="none";
 }
 }
 
-// LOAD PRODUCTS
+// PRODUCTS
 function loadProducts(){
 let container=document.getElementById("productContainer");
 container.innerHTML="";
@@ -146,7 +146,7 @@ container.innerHTML+=`
 });
 }
 
-// IMAGE VIEW
+// IMAGE + ZOOM + BACK BUTTON
 let zoomLevel = 1;
 
 function openImage(src){
@@ -155,6 +155,9 @@ let img = document.getElementById("modalImg");
 img.src=src;
 img.style.transform = "scale(1)";
 zoomLevel = 1;
+
+// back button control
+history.pushState({imgOpen:true}, "");
 }
 
 function closeImage(){
@@ -164,6 +167,7 @@ img.style.transform = "scale(1)";
 zoomLevel = 1;
 }
 
+// zoom
 document.getElementById("modalImg").addEventListener("click", function() {
 if(zoomLevel === 1){
 zoomLevel = 2;
@@ -173,6 +177,14 @@ this.style.cursor = "zoom-out";
 zoomLevel = 1;
 this.style.transform = "scale(1)";
 this.style.cursor = "zoom-in";
+}
+});
+
+// back button press
+window.addEventListener("popstate", function(){
+let modal = document.getElementById("imgModal");
+if(modal.style.display === "flex"){
+closeImage();
 }
 });
 
