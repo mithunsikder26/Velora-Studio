@@ -39,7 +39,13 @@ font-weight:bold;
 
 /* IMAGE MODAL */
 #imgModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:999;}
-#imgModal img{max-width:90%;max-height:90%;border-radius:10px;}
+#imgModal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+transition: transform 0.3s ease;
+cursor: zoom-in;
+}
 #imgModal span{position:absolute;top:20px;right:30px;font-size:30px;color:white;cursor:pointer;}
 </style>
 </head>
@@ -98,7 +104,7 @@ font-weight:bold;
 <script>
 
 // 🔥🔥🔥 শুধু এইখানে control করবে 🔥🔥🔥
-let noticeText = "🔥 🛒Free delivery charge above 199 rupees🚛";
+let noticeText = "🔥 Today Offer:Buy 3 Get 1 Free 🚚";
 let noticeEnabled = true; // true = show, false = hide
 
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
@@ -106,7 +112,7 @@ let products = [
   {name:"Pendant", price:199, image:"https://via.placeholder.com/300"},
   {name:"Earrings", price:149, image:"https://via.placeholder.com/300"},
   {name:"Bala", price:249, image:"https://via.placeholder.com/300"},
-  {name:"Mala", price:80, image:"https://via.placeholder.com/300"},
+  {name:"globe", price:80, image:"https://i.postimg.cc/zfcrvd4s/globe.jpg/300"},
   {name:"churi", price:40, image:"https://via.placeholder.com/300"}
 ];
 
@@ -141,13 +147,34 @@ container.innerHTML+=`
 }
 
 // IMAGE VIEW
+let zoomLevel = 1;
+
 function openImage(src){
 document.getElementById("imgModal").style.display="flex";
-document.getElementById("modalImg").src=src;
+let img = document.getElementById("modalImg");
+img.src=src;
+img.style.transform = "scale(1)";
+zoomLevel = 1;
 }
+
 function closeImage(){
 document.getElementById("imgModal").style.display="none";
+let img = document.getElementById("modalImg");
+img.style.transform = "scale(1)";
+zoomLevel = 1;
 }
+
+document.getElementById("modalImg").addEventListener("click", function() {
+if(zoomLevel === 1){
+zoomLevel = 2;
+this.style.transform = "scale(2)";
+this.style.cursor = "zoom-out";
+}else{
+zoomLevel = 1;
+this.style.transform = "scale(1)";
+this.style.cursor = "zoom-in";
+}
+});
 
 // CART
 let cart=[];
