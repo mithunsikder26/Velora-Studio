@@ -9,6 +9,14 @@
 body{margin:0;font-family:Arial;background:#f4f6f8;}
 header{background:#111;color:#fff;padding:15px;text-align:center;}
 
+.notice{
+background:#ffeb3b;
+color:#000;
+text-align:center;
+padding:10px;
+font-weight:bold;
+}
+
 .search-box{text-align:center;padding:10px;}
 .search-box input{width:90%;max-width:400px;padding:10px;border-radius:8px;border:1px solid #ccc;}
 
@@ -43,6 +51,9 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 <p>Cart: <span id="cartCount">0</span></p>
 <button onclick="openCart()">View Cart</button>
 </header>
+
+<!-- NOTICE BOARD -->
+<div class="notice" id="noticeBoard"></div>
 
 <div class="search-box">
 <input type="text" id="search" placeholder="Search..." onkeyup="filterProducts()">
@@ -86,13 +97,28 @@ header{background:#111;color:#fff;padding:15px;text-align:center;}
 
 <script>
 
+// 🔥🔥🔥 শুধু এইখানে control করবে 🔥🔥🔥
+let noticeText = "🔥 Today Offer:Buy 3 Get 1 Free 🚚";
+let noticeEnabled = true; // true = show, false = hide
+
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
 let products = [
-  {name:"Resin Pendant", price:199, image:"https://via.placeholder.com/300"},
-  {name:"Handmade Earrings", price:149, image:"https://via.placeholder.com/300"},
+  {name:"Pendant", price:199, image:"https://via.placeholder.com/300"},
+  {name:"Earrings", price:149, image:"https://via.placeholder.com/300"},
   {name:"Bala", price:249, image:"https://via.placeholder.com/300"},
-  {name:"Mala", price:80, image:"https://via.placeholder.com/300"}
+  {name:"Mala", price:80, image:"https://via.placeholder.com/300"},
+  {name:"churi", price:40, image:"https://via.placeholder.com/300"}
 ];
+
+// LOAD NOTICE
+function loadNotice(){
+if(noticeEnabled){
+document.getElementById("noticeBoard").style.display="block";
+document.getElementById("noticeBoard").innerText = noticeText;
+}else{
+document.getElementById("noticeBoard").style.display="none";
+}
+}
 
 // LOAD PRODUCTS
 function loadProducts(){
@@ -238,6 +264,7 @@ c.style.display=t.includes(s)?"block":"none";
 }
 
 // LOAD
+loadNotice();
 loadProducts();
 
 </script>
