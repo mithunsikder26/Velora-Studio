@@ -37,7 +37,6 @@ font-weight:bold;
 .popup-box{background:#fff;padding:20px;border-radius:10px;width:90%;max-width:350px;}
 .popup-box input,.popup-box textarea{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:5px;}
 
-/* IMAGE MODAL */
 #imgModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:999;}
 #imgModal img{
 max-width:90%;
@@ -91,17 +90,10 @@ cursor: zoom-in;
 <img id="modalImg">
 </div>
 
-
-
-
-
 <script>
 // 🔥🔥🔥 শুধু এইখানে control করবে 🔥🔥🔥
 let noticeText = "🔥 🛒Free delivery charge above 199 rupees🚛";
 let noticeEnabled = true;
-
-
-
 
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
 let products = [
@@ -171,7 +163,6 @@ this.style.transform="scale(1)";
 }
 });
 
-// IMAGE BACK
 window.addEventListener("popstate", function(){
 let modal = document.getElementById("imgModal");
 if(modal.style.display === "flex"){
@@ -216,7 +207,6 @@ function closeCart(){
 document.getElementById("cartModal").classList.remove("open");
 }
 
-// CART BACK
 window.addEventListener("popstate", function(){
 let cart = document.getElementById("cartModal");
 if(cart.classList.contains("open")){
@@ -224,7 +214,7 @@ closeCart();
 }
 });
 
-// ORDER (unchanged)
+// ORDER
 let mode="",selectedProduct="",selectedPrice=0;
 
 function openForm(p,price,type){
@@ -234,6 +224,9 @@ selectedPrice=price;
 
 document.getElementById("productName").innerText=p+" ₹"+price;
 document.getElementById("popupForm").style.display="flex";
+
+// 👉 BACK SUPPORT ADD
+history.pushState({formOpen:true}, "");
 }
 
 function closeForm(){
@@ -244,7 +237,18 @@ function checkoutCart(){
 mode="cart";
 document.getElementById("productName").innerText="Cart Checkout";
 document.getElementById("popupForm").style.display="flex";
+
+// 👉 BACK SUPPORT ADD
+history.pushState({formOpen:true}, "");
 }
+
+// 👉 BACK BUTTON CONTROL (FORM)
+window.addEventListener("popstate", function(){
+let form = document.getElementById("popupForm");
+if(form.style.display === "flex"){
+closeForm();
+}
+});
 
 function submitOrder(){
 
