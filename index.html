@@ -37,6 +37,7 @@ font-weight:bold;
 .popup-box{background:#fff;padding:20px;border-radius:10px;width:90%;max-width:350px;}
 .popup-box input,.popup-box textarea{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:5px;}
 
+/* IMAGE MODAL */
 #imgModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:999;}
 #imgModal img{
 max-width:90%;
@@ -90,10 +91,17 @@ cursor: zoom-in;
 <img id="modalImg">
 </div>
 
+
+
+
+
 <script>
 // 🔥🔥🔥 শুধু এইখানে control করবে 🔥🔥🔥
 let noticeText = "🔥 🛒Free delivery charge above 199 rupees🚛";
 let noticeEnabled = true;
+
+
+
 
 // 🔥🔥🔥 শুধু এইখানেই product add করবে 🔥🔥🔥
 let products = [
@@ -114,7 +122,7 @@ document.getElementById("noticeBoard").style.display="none";
 }
 }
 
-// PRODUCTS (OLD - unchanged)
+// PRODUCTS
 function loadProducts(){
 let container=document.getElementById("productContainer");
 container.innerHTML="";
@@ -134,62 +142,170 @@ container.innerHTML+=`
 });
 }
 
-// IMAGE + CART + ORDER + SEARCH (same as yours)
-// 👉 (সব আগের মতোই আছে, কিছুই change করা হয়নি)
+// IMAGE
+let zoomLevel = 1;
 
-// ====== NEW SMART SYSTEM START ======
-let allProducts = [...products];
-let currentPage = 1;
-let perPage = 6;
+function openImage(src){
+document.getElementById("imgModal").style.display="flex";
+let img = document.getElementById("modalImg");
+img.src=src;
+img.style.transform="scale(1)";
+zoomLevel=1;
+history.pushState({imgOpen:true}, "");
+}
 
-function loadProducts(){
-let container=document.getElementById("productContainer");
-container.innerHTML="";
+function closeImage(){
+document.getElementById("imgModal").style.display="none";
+let img=document.getElementById("modalImg");
+img.style.transform="scale(1)";
+zoomLevel=1;
+}
 
-let start = (currentPage-1)*perPage;
-let end = start + perPage;
-
-let pageProducts = allProducts.slice(start,end);
-
-pageProducts.forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-<img src="${p.image}" loading="lazy" onclick="openImage('${p.image}')">
-<h3>${p.name}</h3>
-<p class="price">₹${p.price}</p>
-
-<button class="btn cartbtn" onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
-<button class="btn whatsapp" onclick="openForm('${p.name}',${p.price},'whatsapp')">WhatsApp</button>
-<button class="btn upi" onclick="openForm('${p.name}',${p.price},'upi')">Pay</button>
-</div>
-`;
+document.getElementById("modalImg").addEventListener("click", function(){
+if(zoomLevel===1){
+zoomLevel=2;
+this.style.transform="scale(2)";
+}else{
+zoomLevel=1;
+this.style.transform="scale(1)";
+}
 });
 
-let totalPages = Math.ceil(allProducts.length/perPage);
-let paginationHTML = "<div style='text-align:center;margin-top:20px;'>";
+// IMAGE BACK
+window.addEventListener("popstate", function(){
+let modal = document.getElementById("imgModal");
+if(modal.style.display === "flex"){
+closeImage();
+}
+});
 
-for(let i=1;i<=totalPages;i++){
-paginationHTML += `<button onclick="goPage(${i})" style="margin:5px;padding:8px;">${i}</button>`;
+// CART
+let cart=[];
+
+function addToCart(n,p){
+let f=cart.find(i=>i.name===n);
+if(f){f.qty++;}else{cart.push({name:n,price:p,qty:1});}
+updateCart();
 }
 
-paginationHTML += "</div>";
-container.innerHTML += paginationHTML;
+function updateCart(){
+document.getElementById("cartCount").innerText=cart.length;
+
+let html="",total=0;
+cart.forEach((i,idx)=>{
+total+=i.price*i.qty;
+html+=i.name+" x"+i.qty+" = ₹"+(i.price*i.qty)+"<br><button onclick='removeItem("+idx+")'>Remove</button><hr>";
+});
+
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("totalPrice").innerText="Total ₹"+total;
 }
 
-function goPage(p){
-currentPage = p;
-loadProducts();
+function removeItem(i){
+cart.splice(i,1);
+updateCart();
 }
 
-function addNewProduct(name,price,image){
-allProducts.push({name,price,image});
-loadProducts();
+function openCart(){
+document.getElementById("cartModal").classList.add("open");
+updateCart();
+history.pushState({cartOpen:true}, "");
 }
-// ====== NEW SMART SYSTEM END ======
+
+function closeCart(){
+document.getElementById("cartModal").classList.remove("open");
+}
+
+// CART BACK
+window.addEventListener("popstate", function(){
+let cart = document.getElementById("cartModal");
+if(cart.classList.contains("open")){
+closeCart();
+}
+});
+
+// ORDER (unchanged)
+let mode="",selectedProduct="",selectedPrice=0;
+
+function openForm(p,price,type){
+mode=type;
+selectedProduct=p;
+selectedPrice=price;
+
+document.getElementById("productName").innerText=p+" ₹"+price;
+document.getElementById("popupForm").style.display="flex";
+}
+
+function closeForm(){
+document.getElementById("popupForm").style.display="none";
+}
+
+function checkoutCart(){
+mode="cart";
+document.getElementById("productName").innerText="Cart Checkout";
+document.getElementById("popupForm").style.display="flex";
+}
+
+function submitOrder(){
+
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let address=document.getElementById("address").value;
+
+if(!name||!phone||!address){
+alert("Fill all details");
+return;
+}
+
+if(mode==="cart"){
+let msg="Dream Store Order%0A";
+let total=0;
+
+cart.forEach(i=>{
+msg+=i.name+" x"+i.qty+" = ₹"+(i.price*i.qty)+"%0A";
+total+=i.price*i.qty;
+});
+
+msg+="Total ₹"+total+"%0A";
+msg+="Name:"+name+" Phone:"+phone+" Address:"+address;
+
+window.location.href="https://wa.me/919775467300?text="+msg;
+return;
+}
+
+if(mode==="whatsapp"){
+let msg="Product:"+selectedProduct+
+"%0APrice:₹"+selectedPrice+
+"%0AName:"+name+
+"%0APhone:"+phone+
+"%0AAddress:"+address;
+
+window.location.href="https://wa.me/919775467300?text="+msg;
+}
+
+if(mode==="upi"){
+let note=encodeURIComponent(selectedProduct+" "+name);
+
+window.location.href="upi://pay?pa=mithunsikder999@axl&pn=Dream Store&am="+selectedPrice+"&cu=INR&tn="+note;
+}
+
+}
+
+// SEARCH
+function filterProducts(){
+let s=document.getElementById("search").value.toLowerCase();
+let cards=document.getElementsByClassName("card");
+
+for(let c of cards){
+let t=c.getElementsByTagName("h3")[0].innerText.toLowerCase();
+c.style.display=t.includes(s)?"block":"none";
+}
+}
 
 // LOAD
 loadNotice();
 loadProducts();
+
 </script>
 
 </body>
